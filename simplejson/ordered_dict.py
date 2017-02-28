@@ -3,7 +3,7 @@
 http://code.activestate.com/recipes/576693/
 
 """
-from UserDict import DictMixin
+from collections import MutableMapping
 
 # Modified from original to support Python 2.4, see
 # http://code.google.com/p/simplejson/issues/detail?id=53
@@ -16,7 +16,8 @@ except NameError:
                 return False
         return True
 
-class OrderedDict(dict, DictMixin):
+
+class OrderedDict(dict, MutableMapping):
 
     def __init__(self, *args, **kwds):
         if len(args) > 1:
@@ -85,15 +86,6 @@ class OrderedDict(dict, DictMixin):
     def keys(self):
         return list(self)
 
-    setdefault = DictMixin.setdefault
-    update = DictMixin.update
-    pop = DictMixin.pop
-    values = DictMixin.values
-    items = DictMixin.items
-    iterkeys = DictMixin.iterkeys
-    itervalues = DictMixin.itervalues
-    iteritems = DictMixin.iteritems
-
     def __repr__(self):
         if not self:
             return '%s()' % (self.__class__.__name__,)
@@ -111,8 +103,8 @@ class OrderedDict(dict, DictMixin):
 
     def __eq__(self, other):
         if isinstance(other, OrderedDict):
-            return len(self)==len(other) and \
-                   all(p==q for p, q in  zip(self.items(), other.items()))
+            return len(self) == len(other) and \
+                   all(p == q for p, q in zip(self.items(), other.items()))
         return dict.__eq__(self, other)
 
     def __ne__(self, other):
